@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  secrets-simulator:
+    image: mikesir87/secrets-simulator
+    environment:
+      DB_USERNAME: admin
+      DB_PASSWORD: password1234!
+    volumes:
+      - secrets:/run/secrets:rw
+  viewer:
+    image: mikesir87/secrets-viewer
+    volumes:
+      - secrets:/run/secrets:ro
+
+volumes:
+  secrets:
+    driver: local
