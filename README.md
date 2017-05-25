@@ -6,18 +6,25 @@
 
 [Blog post here](https://blog.mikesir87.io/2017/05/using-docker-secrets-during-development/)
 
-When running locally for development, it's hard to use secrets as they require Docker Swarm. And, it's often hard to use Docker Swarm during development as you frequently want to use a `docker-compose.yml` with `build` directives, volume mounts, etc.  So, how do you get in the practice of using secrets?  Well, simulate them!
+Docker Secrets are awesome. They provide a secure way to get secret/sensitive data into your container. However, they require a Swarm to run.  Since secrets are exposed simply as files in `/run/secrets`, we can mock it using one of two methods:
 
-There are a few ways to simulate secrets:
-
-- Mount secrets to `/run/secrets` from the host (which requires you to define the files somewhere)
+- Mount secrets files to `/run/secrets` from the host (which requires you to define a file per secret)
 - Use this image!
 
-The "Secrets Simulator" will take all defined environment variables and create secrets files where the variable name is the filename and the variable value is the secret content. This allows you to keep everything within your docker-compose.yml!
+The "Secrets Simulator" image will take all defined environment variables and create secrets files where the variable name is the filename and the variable value is the secret content. This allows you to keep everything within your docker-compose.yml!
+
+## How to Use
+
+Here are the quick steps...
+
+1. Add a service using the `mikesir87/secrets-simulator` image to your `docker-compose.yml` file.
+2. Define an environment variable for each secret you want to expose in your app.
+3. Create a volume that will share the new secrets with your app and mount it to both the simulator and app services.
+4. You're done!
 
 ## Example
 
-The following `docker-compose.yml` file is in the repo, so you can give it a try. I only add a service using the `mikesir87/secrets-simulator` image. Any declared environment variables are then converted into files in the `/run/secrets` directory. Since that directory is a volume, I can then mount it to other locations that need secrets!
+This is the `docker-compose.yml` found in the repo. So... give it a shot yourself!
 
 ```yaml
 version: '3.1'
@@ -40,6 +47,33 @@ volumes:
   secrets:
     driver: local
 ```
+
+After running `docker-compose up`, we have output that looks like this:
+
+```
+$ docker-compose up
+Creating network "secretsimulator_default" with the default driver
+Starting secretsimulator_secrets-simulator_1 ...
+Starting secretsimulator_secrets-simulator_1
+Starting secretsimulator_viewer_1 ...
+Starting secretsimulator_viewer_1 ... done
+Attaching to secretsimulator_secrets-simulator_1, secretsimulator_viewer_1
+viewer_1             | Starting to dump secrets...
+viewer_1             | DB_PASSWORD : password1234!
+viewer_1             | DB_USERNAME : admin
+secretsimulator_secrets-simulator_1 exited with code 0
+secretsimulator_viewer_1 exited with code 0
+```
+
+So... what happened?  The contents of `/run/secrets` ended up looking like this...
+
+```
+/run/secrets
+    DB_PASSWORD      => contents of: password1234!
+    DB_USERNAME      => contents of: admin
+```
+
+
 
 ## FAQ
 
