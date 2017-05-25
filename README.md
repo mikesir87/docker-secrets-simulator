@@ -1,5 +1,11 @@
 # Docker Secrets Simulator
 
+![Docker Stars](https://img.shields.io/docker/stars/mikesir87/secrets-simulator.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/mikesir87/secrets-simulator.svg)
+![Docker Automated Builds](http://img.shields.io/docker/automated/mikesir87/secrets-simulator.svg)
+
+[Blog post here](https://blog.mikesir87.io/2017/05/using-docker-secrets-during-development/)
+
 When running locally for development, it's hard to use secrets as they require Docker Swarm. And, it's often hard to use Docker Swarm during development as you frequently want to use a `docker-compose.yml` with `build` directives, volume mounts, etc.  So, how do you get in the practice of using secrets?  Well, simulate them!
 
 There are a few ways to simulate secrets:
