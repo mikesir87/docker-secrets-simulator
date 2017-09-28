@@ -10,7 +10,8 @@ import (
 
 func main() {
   // This MUST remain in alphabetical order for contains to work
-  ignores := []string{ "GOLANG_VERSION", "GOPATH", "HOME", "HOSTNAME", "PATH", "no_proxy" }
+  ignores := []string{ "GOLANG_VERSION", "GOPATH", "HOME", "HOSTNAME", "PATH",
+                       "TERM", "no_proxy" }
 
   for _, e := range os.Environ() {
     pair := strings.Split(e, "=")
