@@ -14,7 +14,7 @@ func main() {
                        "TERM", "no_proxy" }
 
   for _, e := range os.Environ() {
-    pair := strings.Split(e, "=")
+    pair := strings.SplitN(e, "=", 2)
     if !contains(ignores, pair[0]) {
       contents := []byte(pair[1]);
       err := ioutil.WriteFile("/run/secrets/" + pair[0], contents, 0644)
